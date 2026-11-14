@@ -1,15 +1,14 @@
-﻿//using BookStore.API.Models;
-using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.Models;
 
 namespace BookStore_project.Core.Repository
 {
     public interface IOrderItemRepository
     {
-        Task<IEnumerable<OrderItem>> GetAllOrderItemsAsync();
-        Task<OrderItem?> GetOrderItemByIdAsync(decimal id);
-        Task<IEnumerable<OrderItem>> GetItemsByOrderAsync(decimal orderId);
-        Task CreateOrderItemAsync(OrderItem orderItem);
-        Task UpdateOrderItemAsync(OrderItem orderItem);
-        Task DeleteOrderItemAsync(decimal id);
+        List<OrderItem> GetAllOrderItems();
+        OrderItem GetOrderItemById(decimal id);
+        void CreateOrderItem(OrderItem orderItem);
+        void UpdateOrderItem(OrderItem orderItem);
+        void DeleteOrderItem(decimal id);
+        List<OrderItem> GetItemsByOrder(decimal ordId);
     }
 }

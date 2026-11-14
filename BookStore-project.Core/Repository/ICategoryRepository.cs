@@ -4,10 +4,10 @@ namespace BookStore_project.Core.Repository
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetAllCategoriesAsync();
-        Task<Category?> GetCategoryByIdAsync(decimal id);
-        Task CreateCategoryAsync(Category category);
-        Task UpdateCategoryAsync(Category category);
-        Task DeleteCategoryAsync(decimal id);
+        List<Category> GetAllCategory();
+        Category GetByCategoryId(decimal id);
+        void CreateCategory(Category category);
+        void UpdateCategory(Category category);
+        void DeleteCategory(decimal id);
     }
 }

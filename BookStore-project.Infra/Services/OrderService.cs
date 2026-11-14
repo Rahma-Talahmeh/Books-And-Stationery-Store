@@ -1,47 +1,46 @@
-﻿//using BookStore.API.Models;
-using BookStore_project.Core.IServices;
-using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
+using BookStore_project.Core.Services;
 
-namespace BookStore_project.Core.Services
+namespace BookStore_project.Infra.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderRepository orderRepository;
 
         public OrderService(IOrderRepository orderRepository)
         {
-            _orderRepository = orderRepository;
+            this.orderRepository = orderRepository;
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        public List<Order> GetAllOrders()
         {
-            return await _orderRepository.GetAllOrdersAsync();
+            return orderRepository.GetAllOrders();
         }
 
-        public async Task<Order?> GetOrderByIdAsync(decimal id)
+        public Order GetOrderById(decimal id)
         {
-            return await _orderRepository.GetOrderByIdAsync(id);
+            return orderRepository.GetOrderById(id);
         }
 
-        public async Task CreateOrderAsync(Order order)
+        public void CreateOrder(Order order)
         {
-            await _orderRepository.CreateOrderAsync(order);
+            orderRepository.CreateOrder(order);
         }
 
-        public async Task UpdateOrderAsync(Order order)
+        public void UpdateOrder(Order order)
         {
-            await _orderRepository.UpdateOrderAsync(order);
+            orderRepository.UpdateOrder(order);
         }
 
-        public async Task DeleteOrderAsync(decimal id)
+        public void DeleteOrder(decimal id)
         {
-            await _orderRepository.DeleteOrderAsync(id);
+            orderRepository.DeleteOrder(id);
         }
 
-        public async Task UpdateOrderStatusAsync(decimal id, string newStatus)
+        public void UpdateOrderStatus(decimal id, string newStatus)
         {
-            await _orderRepository.UpdateOrderStatusAsync(id, newStatus);
+            orderRepository.UpdateOrderStatus(id, newStatus);
         }
     }
 }

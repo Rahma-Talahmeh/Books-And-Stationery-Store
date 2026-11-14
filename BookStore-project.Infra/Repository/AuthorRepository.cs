@@ -1,8 +1,8 @@
-﻿using Dapper;
-using System.Data;
+﻿using System.Data;
 using BookStore_project.Core.Common;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
+using Dapper;
 
 namespace BookStore_project.Infra.Repository
 {
@@ -15,53 +15,61 @@ namespace BookStore_project.Infra.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
+        public List<Author> GetAllAuthors()
         {
-            var p = new DynamicParameters();
-            p.Add("p_result", dbType: DbType.Object, direction: ParameterDirection.Output);
-
-            using var connection = _dbContext.Connection;
-            return await connection.QueryAsync<Author>("AUTHOR_PACKAGE.GET_ALL_AUTHORS", p, commandType: CommandType.StoredProcedure);
+            IEnumerable<Author> result = _dbContext.Connection.Query<Author>(
+                "AUTHOR_PACKAGE.GetAllAuthors",
+                commandType: CommandType.StoredProcedure);
+            return result.ToList();
         }
 
-        public async Task<Author?> GetAuthorByIdAsync(decimal id)
+        public Author GetAuthorById(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("p_id", id, DbType.Decimal, ParameterDirection.Input);
-            p.Add("p_result", dbType: DbType.Object, direction: ParameterDirection.Output);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            return await connection.QueryFirstOrDefaultAsync<Author>("AUTHOR_PACKAGE.GET_AUTHOR_BY_ID", p, commandType: CommandType.StoredProcedure);
+            IEnumerable<Author> result = _dbContext.Connection.Query<Author>(
+                "AUTHOR_PACKAGE.GETAUTHORBYID",
+                p,
+                commandType: CommandType.StoredProcedure);
+
+            return result.FirstOrDefault();
         }
 
-        public async Task CreateAuthorAsync(Author author)
+        public void CreateAuthor(Author author)
         {
-            var p = new DynamicParameters();
-            p.Add("p_name", author.AuthorName, DbType.String, ParameterDirection.Input);
-            p.Add("p_bio", author.Bio, DbType.String, ParameterDirection.Input);
+            var parameters = new DynamicParameters();
+            parameters.Add("Author_Name", author.AuthorName, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Bio", author.Bio, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync("AUTHOR_PACKAGE.CREATE_AUTHOR", p, commandType: CommandType.StoredProcedure);
+            _dbContext.Connection.Execute(
+                "AUTHOR_PACKAGE.CREATEAUTHOR",
+                parameters,
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateAuthorAsync(Author author)
+        public void UpdateAuthor(Author author)
         {
             var p = new DynamicParameters();
-            p.Add("p_id", author.AuthorId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("p_name", author.AuthorName, DbType.String, ParameterDirection.Input);
-            p.Add("p_bio", author.Bio, DbType.String, ParameterDirection.Input);
+            p.Add("ID", author.AuthorId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Author_Name", author.AuthorName, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Bio", author.Bio, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync("AUTHOR_PACKAGE.UPDATE_AUTHOR", p, commandType: CommandType.StoredProcedure);
+            _dbContext.Connection.Execute(
+                "AUTHOR_PACKAGE.UPDATEAUTHOR",
+                p,
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteAuthorAsync(decimal id)
+        public void DeleteAuthor(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("p_id", id, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync("AUTHOR_PACKAGE.DELETE_AUTHOR", p, commandType: CommandType.StoredProcedure);
+            _dbContext.Connection.Execute(
+                "AUTHOR_PACKAGE.DELETEAUTHOR",
+                p,
+                commandType: CommandType.StoredProcedure);
         }
     }
 }

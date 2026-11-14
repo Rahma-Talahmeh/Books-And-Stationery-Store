@@ -1,9 +1,9 @@
-﻿using BookStore_project.Core.IServices;
+﻿
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using BookStore_project.Core.Services;
 
-namespace BookStore_project.Core.Services
+namespace BookStore_project.Infra.Services
 {
     public class AuthorService : IAuthorService
     {
@@ -14,29 +14,29 @@ namespace BookStore_project.Core.Services
             _authorRepository = authorRepository;
         }
 
-        public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
+        public List<Author> GetAllAuthors()
         {
-            return await _authorRepository.GetAllAuthorsAsync();
+            return _authorRepository.GetAllAuthors();
         }
 
-        public async Task<Author?> GetAuthorByIdAsync(decimal id)
+        public Author GetAuthorById(decimal id)
         {
-            return await _authorRepository.GetAuthorByIdAsync(id);
+            return _authorRepository.GetAuthorById(id);
         }
 
-        public async Task CreateAuthorAsync(Author author)
+        public void CreateAuthor(Author author)
         {
-            await _authorRepository.CreateAuthorAsync(author);
+            _authorRepository.CreateAuthor(author);
         }
 
-        public async Task UpdateAuthorAsync(Author author)
+        public void UpdateAuthor(Author author)
         {
-            await _authorRepository.UpdateAuthorAsync(author);
+            _authorRepository.UpdateAuthor(author);
         }
 
-        public async Task DeleteAuthorAsync(decimal id)
+        public void DeleteAuthor(decimal id)
         {
-            await _authorRepository.DeleteAuthorAsync(id);
+            _authorRepository.DeleteAuthor(id);
         }
     }
 }

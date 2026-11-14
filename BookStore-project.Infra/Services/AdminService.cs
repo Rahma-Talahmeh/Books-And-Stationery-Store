@@ -1,47 +1,46 @@
-﻿using BookStore_project.Core.IServices;
-using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using BookStore_project.Core.Services;
 
-namespace BookStore_project.Infra.Services;
-
-public class AdminService : IAdminService
+namespace BookStore_project.Infra.Services
 {
-    private readonly IAdminRepository _adminRepository;
-
-    public AdminService(IAdminRepository adminRepository)
+    public class AdminService : IAdminService
     {
-        _adminRepository = adminRepository;
-    }
+        private readonly IAdminRepository _adminRepository;
 
-    public async Task<IEnumerable<Admin>> GetAllAdminsAsync()
-    {
-        return await _adminRepository.GetAllAdminsAsync();
-    }
+        public AdminService(IAdminRepository adminRepository)
+        {
+            _adminRepository = adminRepository;
+        }
 
-    public async Task<Admin?> GetAdminByIdAsync(int id)
-    {
-        return await _adminRepository.GetAdminByIdAsync(id);
-    }
+        public List<Admin> GetAllAdmin()
+        {
+            return _adminRepository.GetAllAdmin();
+        }
 
-    public async Task CreateAdminAsync(Admin admin)
-    {
-        await _adminRepository.CreateAdminAsync(admin);
-    }
+        public Admin GetByAdminId(int id)
+        {
+            return _adminRepository.GetByAdminId(id);
+        }
 
-    public async Task UpdateAdminAsync(Admin admin)
-    {
-        await _adminRepository.UpdateAdminAsync(admin);
-    }
+        public void CreateAdmin(Admin admin)
+        {
+            _adminRepository.CreateAdmin(admin);
+        }
 
-    public async Task DeleteAdminAsync(int id)
-    {
-        await _adminRepository.DeleteAdminAsync(id);
-    }
+        public void UpdateAdmin(Admin admin)
+        {
+            _adminRepository.UpdateAdmin(admin);
+        }
 
-    public async Task<Admin?> AdminLoginAsync(string username, string password)
-    {
-        return await _adminRepository.AdminLoginAsync(username, password);
+        public void DeleteAdmin(int id)
+        {
+            _adminRepository.DeleteAdmin(id);
+        }
+
+        public Admin AdminLogin(string username, string password)
+        {
+            return _adminRepository.AdminLogin(username, password);
+        }
     }
 }

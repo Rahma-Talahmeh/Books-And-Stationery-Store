@@ -1,10 +1,10 @@
-﻿using BookStore_project.Core.Common;
+﻿
+using System.Data;
+using BookStore_project.Core.Common;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using Dapper;
-using System.Data;
-
-namespace BookStore_project.Infra
+namespace BookStore_project.Infra.Repository
 {
     public class AdminRepository : IAdminRepository
     {
@@ -15,82 +15,72 @@ namespace BookStore_project.Infra
             _dbContext = dbContext;
         }
 
-        // 1. جلب جميع المشرفين
-        public async Task<IEnumerable<Admin>> GetAllAdminsAsync()
+        public List<Admin> GetAllAdmin()
         {
-            var result = await _dbContext.Connection.QueryAsync<Admin>(
-                "ADMIN_PACKAGE.GetAllAdmins",
+            IEnumerable<Admin> result = _dbContext.Connection.Query<Admin>(
+                "Admin_Package.GetAllAdmins",
                 commandType: CommandType.StoredProcedure);
-            return result;
+            return result.ToList();
         }
 
-        // 2. جلب مشرف معين بواسطة الـ ID
-        public async Task<Admin?> GetAdminByIdAsync(int id)
+        public Admin GetByAdminId(int id)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("ID", id, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            var p = new DynamicParameters();
+            p.Add("ID", id, dbType: DbType.Int32, direction: ParameterDirection.Input);
 
-            var result = await _dbContext.Connection.QueryAsync<Admin>(
-                "ADMIN_PACKAGE.GETADMINBYID",
-                parameters,
+            IEnumerable<Admin> result = _dbContext.Connection.Query<Admin>(
+                "Admin_Package.GetAdminById",
+                p,
                 commandType: CommandType.StoredProcedure);
 
             return result.FirstOrDefault();
         }
 
-        // 3. إضافة مشرف جديد
-        public async Task CreateAdminAsync(Admin admin)
+        public void CreateAdmin(Admin admin)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("Username", admin.Username, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Password_Hash", admin.PasswordHash, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Full_Name", admin.FullName, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Admin_Name", admin.Username, dbType: DbType.String, direction: ParameterDirection.Input);
             parameters.Add("Email", admin.Email, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            await _dbContext.Connection.ExecuteAsync(
-                "ADMIN_PACKAGE.CREATEADMIN",
+            _dbContext.Connection.Execute(
+                "Admin_Package.CREATEADMIN",
                 parameters,
                 commandType: CommandType.StoredProcedure);
         }
 
-        // 4. تعديل بيانات مشرف
-        public async Task UpdateAdminAsync(Admin admin)
+        public void UpdateAdmin(Admin admin)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("ID", admin.AdminId, dbType: DbType.Int32, direction: ParameterDirection.Input);
-            parameters.Add("Username", admin.Username, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Password_Hash", admin.PasswordHash, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Full_Name", admin.FullName, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Email", admin.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+            var p = new DynamicParameters();
+            p.Add("ID", admin.AdminId, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            p.Add("Admin_Name", admin.Username, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Email", admin.Email, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            await _dbContext.Connection.ExecuteAsync(
-                "ADMIN_PACKAGE.UPDATEADMIN",
-                parameters,
+            _dbContext.Connection.Execute(
+                "Admin_Package.UPDATEADMIN",
+                p,
                 commandType: CommandType.StoredProcedure);
         }
 
-        // 5. حذف مشرف
-        public async Task DeleteAdminAsync(int id)
+        public void DeleteAdmin(int id)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("ID", id, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            var p = new DynamicParameters();
+            p.Add("ID", id, dbType: DbType.Int32, direction: ParameterDirection.Input);
 
-            await _dbContext.Connection.ExecuteAsync(
-                "ADMIN_PACKAGE.DELETEADMIN",
-                parameters,
+            _dbContext.Connection.Execute(
+                "Admin_Package.DELETEADMIN",
+                p,
                 commandType: CommandType.StoredProcedure);
         }
 
-        // 6. تسجيل الدخول
-        public async Task<Admin?> AdminLoginAsync(string username, string password)
+        public Admin AdminLogin(string username, string password)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("User_Name", username, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Pass", password, dbType: DbType.String, direction: ParameterDirection.Input);
+            var p = new DynamicParameters();
+            p.Add("User_NAME", username, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("PASS", password, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            var result = await _dbContext.Connection.QueryAsync<Admin>(
-                "ADMIN_PACKAGE.ADMIN_LOGIN",
-                parameters,
+            IEnumerable<Admin> result = _dbContext.Connection.Query<Admin>(
+                "Login_Package.User_Login",
+                p,
                 commandType: CommandType.StoredProcedure);
 
             return result.FirstOrDefault();

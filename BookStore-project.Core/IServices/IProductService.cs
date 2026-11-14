@@ -1,15 +1,15 @@
 ﻿using BookStore_project.Core.Models;
 
-namespace BookStore_project.Core.IServices
+namespace BookStore_project.Core.Services
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetAllProductsAsync();
-        Task<Product?> GetProductByIdAsync(decimal id);
-        Task<IEnumerable<Product>> GetAllProductsByCategoryAsync(decimal categoryId);
-        Task<IEnumerable<Product>> GetProductsByAuthorAsync(decimal authorId);
-        Task CreateProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
-        Task DeleteProductAsync(decimal id);
+        List<Product> GetAllProducts();
+        Product GetProductById(decimal id);
+        void CreateProduct(Product product);
+        void UpdateProduct(Product product);
+        void DeleteProduct(decimal id);
+        List<Product> GetAllProductsByCategory(decimal catId);
+        List<Product> GetProductsByAuthor(decimal authId);
     }
 }

@@ -1,62 +1,51 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BookStore_project.Core.Models;
-using BookStore_project.Core.IServices;
+﻿using BookStore_project.Core.Models;
+using BookStore_project.Core.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore.API.Controllers
+namespace BookStore_project.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryService categoryService;
 
         public CategoryController(ICategoryService categoryService)
         {
-            _categoryService = categoryService;
+            this.categoryService = categoryService;
         }
 
-        // GET: api/category
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        public List<Category> GetAllCategory()
         {
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            return Ok(categories);
+            return categoryService.GetAllCategory();
         }
 
-        // GET: api/category/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(decimal id)
+        [HttpGet]
+        [Route("getByCategoryId/{id}")]
+        public Category GetByCategoryId(decimal id)
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound(new { message = "Category not found" });
-            }
-            return Ok(category);
+            return categoryService.GetByCategoryId(id);
         }
 
-        // POST: api/category
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] Category category)
+        public void CreateCategory(Category category)
         {
-            await _categoryService.CreateCategoryAsync(category);
-            return Ok(new { message = "Category created successfully" });
+            categoryService.CreateCategory(category);
         }
 
-        // PUT: api/category
         [HttpPut]
-        public async Task<IActionResult> UpdateCategory([FromBody] Category category)
+        public void UpdateCategory(Category category)
         {
-            await _categoryService.UpdateCategoryAsync(category);
-            return Ok(new { message = "Category updated successfully" });
+            categoryService.UpdateCategory(category);
         }
 
-        // DELETE: api/category/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(decimal id)
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public void DeleteCategory(decimal id)
         {
-            await _categoryService.DeleteCategoryAsync(id);
-            return Ok(new { message = "Category deleted successfully" });
+            categoryService.DeleteCategory(id);
         }
     }
+}
 }

@@ -1,71 +1,57 @@
-﻿//using BookStore.API.Models;
-using BookStore_project.Core.IServices;
-using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.Models;
+using BookStore_project.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore.API.Controllers
+namespace BookStore_project.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _orderService;
+        private readonly IOrderService orderService;
 
         public OrderController(IOrderService orderService)
         {
-            _orderService = orderService;
+            this.orderService = orderService;
         }
 
-        // GET: api/order
         [HttpGet]
-        public async Task<IActionResult> GetAllOrders()
+        public List<Order> GetAllOrders()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
-            return Ok(orders);
+            return orderService.GetAllOrders();
         }
 
-        // GET: api/order/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderById(decimal id)
+        [HttpGet]
+        [Route("getByOrderId/{id}")]
+        public Order GetOrderById(decimal id)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound(new { message = "Order not found" });
-            }
-            return Ok(order);
+            return orderService.GetOrderById(id);
         }
 
-        // POST: api/order
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] Order order)
+        public void CreateOrder(Order order)
         {
-            await _orderService.CreateOrderAsync(order);
-            return Ok(new { message = "Order created successfully" });
+            orderService.CreateOrder(order);
         }
 
-        // PUT: api/order
         [HttpPut]
-        public async Task<IActionResult> UpdateOrder([FromBody] Order order)
+        public void UpdateOrder(Order order)
         {
-            await _orderService.UpdateOrderAsync(order);
-            return Ok(new { message = "Order updated successfully" });
+            orderService.UpdateOrder(order);
         }
 
-        // PATCH: api/order/5/status
-        [HttpPatch("{id}/status")]
-        public async Task<IActionResult> UpdateOrderStatus(decimal id, [FromBody] string newStatus)
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public void DeleteOrder(decimal id)
         {
-            await _orderService.UpdateOrderStatusAsync(id, newStatus);
-            return Ok(new { message = "Order status updated successfully" });
+            orderService.DeleteOrder(id);
         }
 
-        // DELETE: api/order/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(decimal id)
+        [HttpPut]
+        [Route("UpdateOrderStatus/{id}/{newStatus}")]
+        public void UpdateOrderStatus(decimal id, string newStatus)
         {
-            await _orderService.DeleteOrderAsync(id);
-            return Ok(new { message = "Order deleted successfully" });
+            orderService.UpdateOrderStatus(id, newStatus);
         }
     }
 }

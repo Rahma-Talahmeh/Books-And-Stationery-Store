@@ -1,13 +1,13 @@
 ﻿using BookStore_project.Core.Models;
 
-namespace BookStore_project.Core.IServices
+namespace BookStore_project.Core.Services
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<Category>> GetAllCategoriesAsync();
-        Task<Category?> GetCategoryByIdAsync(decimal id);
-        Task CreateCategoryAsync(Category category);
-        Task UpdateCategoryAsync(Category category);
-        Task DeleteCategoryAsync(decimal id);
+        List<Category> GetAllCategory();
+        Category GetByCategoryId(decimal id);
+        void CreateCategory(Category category);
+        void UpdateCategory(Category category);
+        void DeleteCategory(decimal id);
     }
 }

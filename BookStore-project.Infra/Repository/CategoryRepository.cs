@@ -1,67 +1,75 @@
-﻿using Dapper;
-using System.Data;
+﻿using System.Data;
 using BookStore_project.Core.Common;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
+using Dapper;
 
 namespace BookStore_project.Infra.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly IDbContext _dbContext;
+        private readonly IDbContext DbContext;
 
-        public CategoryRepository(IDbContext dbContext)
+        public CategoryRepository(IDbContext dBContext)
         {
-            _dbContext = dbContext;
+            this.DbContext = dBContext;
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        public List<Category> GetAllCategory()
         {
-            var p = new DynamicParameters();
-            p.Add("p_result", dbType: DbType.Object, direction: ParameterDirection.Output);
-
-            using var connection = _dbContext.Connection;
-            return await connection.QueryAsync<Category>("CATEGORY_PACKAGE.GET_ALL_CATEGORIES", p, commandType: CommandType.StoredProcedure);
+            IEnumerable<Category> result = DbContext.Connection.Query<Category>(
+                "Category_Package.GetAllCategories",
+                commandType: CommandType.StoredProcedure);
+            return result.ToList();
         }
 
-        public async Task<Category?> GetCategoryByIdAsync(decimal id)
+        public Category GetByCategoryId(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("p_id", id, DbType.Decimal, ParameterDirection.Input);
-            p.Add("p_result", dbType: DbType.Object, direction: ParameterDirection.Output);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            return await connection.QueryFirstOrDefaultAsync<Category>("CATEGORY_PACKAGE.GET_CATEGORY_BY_ID", p, commandType: CommandType.StoredProcedure);
+            IEnumerable<Category> result = DbContext.Connection.Query<Category>(
+                "Category_Package.GetCategoryById",
+                p,
+                commandType: CommandType.StoredProcedure);
+
+            return result.FirstOrDefault();
         }
 
-        public async Task CreateCategoryAsync(Category category)
+        public void CreateCategory(Category category)
         {
-            var p = new DynamicParameters();
-            p.Add("p_name", category.CategoryName, DbType.String, ParameterDirection.Input);
-            p.Add("p_description", category.Description, DbType.String, ParameterDirection.Input);
+            var parameters = new DynamicParameters();
+            parameters.Add("Category_Name", category.CategoryName, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Description", category.Description, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync("CATEGORY_PACKAGE.CREATE_CATEGORY", p, commandType: CommandType.StoredProcedure);
+            DbContext.Connection.Execute(
+                "Category_Package.CREATECATEGORY",
+                parameters,
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateCategoryAsync(Category category)
+        public void UpdateCategory(Category category)
         {
             var p = new DynamicParameters();
-            p.Add("p_id", category.CategoryId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("p_name", category.CategoryName, DbType.String, ParameterDirection.Input);
-            p.Add("p_description", category.Description, DbType.String, ParameterDirection.Input);
+            p.Add("ID", category.CategoryId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Category_Name", category.CategoryName, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Description", category.Description, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync("CATEGORY_PACKAGE.UPDATE_CATEGORY", p, commandType: CommandType.StoredProcedure);
+            DbContext.Connection.Execute(
+                "Category_Package.UPDATECATEGORY",
+                p,
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteCategoryAsync(decimal id)
+        public void DeleteCategory(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("p_id", id, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync("CATEGORY_PACKAGE.DELETE_CATEGORY", p, commandType: CommandType.StoredProcedure);
+            DbContext.Connection.Execute(
+                "Category_Package.DELETECATEGORY",
+                p,
+                commandType: CommandType.StoredProcedure);
         }
     }
 }

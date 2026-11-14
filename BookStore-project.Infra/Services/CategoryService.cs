@@ -1,41 +1,42 @@
-﻿using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.IServices;
+using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
-using BookStore_project.Core.IServices;
+using BookStore_project.Core.Services;
 
-namespace BookStore_project.Core.Services
+namespace BookStore_project.Infra.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryRepository categoryRepository;
 
         public CategoryService(ICategoryRepository categoryRepository)
         {
-            _categoryRepository = categoryRepository;
+            this.categoryRepository = categoryRepository;
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        public List<Category> GetAllCategory()
         {
-            return await _categoryRepository.GetAllCategoriesAsync();
+            return categoryRepository.GetAllCategory();
         }
 
-        public async Task<Category?> GetCategoryByIdAsync(decimal id)
+        public Category GetByCategoryId(decimal id)
         {
-            return await _categoryRepository.GetCategoryByIdAsync(id);
+            return categoryRepository.GetByCategoryId(id);
         }
 
-        public async Task CreateCategoryAsync(Category category)
+        public void CreateCategory(Category category)
         {
-            await _categoryRepository.CreateCategoryAsync(category);
+            categoryRepository.CreateCategory(category);
         }
 
-        public async Task UpdateCategoryAsync(Category category)
+        public void UpdateCategory(Category category)
         {
-            await _categoryRepository.UpdateCategoryAsync(category);
+            categoryRepository.UpdateCategory(category);
         }
 
-        public async Task DeleteCategoryAsync(decimal id)
+        public void DeleteCategory(decimal id)
         {
-            await _categoryRepository.DeleteCategoryAsync(id);
+            categoryRepository.DeleteCategory(id);
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BookStore_project.Core.Models;
-using BookStore_project.Core.IServices;
+﻿using BookStore_project.Core.Models;
+using BookStore_project.Core.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace BookStore.API.Controllers
+namespace BookStore_project.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,48 +15,34 @@ namespace BookStore.API.Controllers
             _authorService = authorService;
         }
 
-        // GET: api/author
         [HttpGet]
-        public async Task<IActionResult> GetAllAuthors()
+        public List<Author> GetAllAuthors()
         {
-            var authors = await _authorService.GetAllAuthorsAsync();
-            return Ok(authors);
+            return _authorService.GetAllAuthors();
         }
 
-        // GET: api/author/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuthorById(decimal id)
+        [HttpGet("getById/{id}")]
+        public Author GetAuthorById(decimal id)
         {
-            var author = await _authorService.GetAuthorByIdAsync(id);
-            if (author == null)
-            {
-                return NotFound(new { message = "Author not found" });
-            }
-            return Ok(author);
+            return _authorService.GetAuthorById(id);
         }
 
-        // POST: api/author
         [HttpPost]
-        public async Task<IActionResult> CreateAuthor([FromBody] Author author)
+        public void CreateAuthor(Author author)
         {
-            await _authorService.CreateAuthorAsync(author);
-            return Ok(new { message = "Author created successfully" });
+            _authorService.CreateAuthor(author);
         }
 
-        // PUT: api/author
         [HttpPut]
-        public async Task<IActionResult> UpdateAuthor([FromBody] Author author)
+        public void UpdateAuthor(Author author)
         {
-            await _authorService.UpdateAuthorAsync(author);
-            return Ok(new { message = "Author updated successfully" });
+            _authorService.UpdateAuthor(author);
         }
 
-        // DELETE: api/author/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor(decimal id)
+        [HttpDelete("delete/{id}")]
+        public void DeleteAuthor(decimal id)
         {
-            await _authorService.DeleteAuthorAsync(id);
-            return Ok(new { message = "Author deleted successfully" });
+            _authorService.DeleteAuthor(id);
         }
     }
 }

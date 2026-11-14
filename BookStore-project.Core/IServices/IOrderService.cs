@@ -1,15 +1,15 @@
-﻿//using BookStore.API.Models;
+﻿
 using BookStore_project.Core.Models;
 
-namespace BookStore_project.Core.IServices
+namespace BookStore_project.Core.Services
 {
     public interface IOrderService
     {
-        Task<IEnumerable<Order>> GetAllOrdersAsync();
-        Task<Order?> GetOrderByIdAsync(decimal id);
-        Task CreateOrderAsync(Order order);
-        Task UpdateOrderAsync(Order order);
-        Task DeleteOrderAsync(decimal id);
-        Task UpdateOrderStatusAsync(decimal id, string newStatus);
+        List<Order> GetAllOrders();
+        Order GetOrderById(decimal id);
+        void CreateOrder(Order order);
+        void UpdateOrder(Order order);
+        void DeleteOrder(decimal id);
+        void UpdateOrderStatus(decimal id, string newStatus);
     }
 }

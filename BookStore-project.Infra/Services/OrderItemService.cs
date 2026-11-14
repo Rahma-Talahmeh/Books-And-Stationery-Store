@@ -1,47 +1,47 @@
-﻿//using BookStore.API.Models;
-using BookStore_project.Core.IServices;
+﻿
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
+using BookStore_project.Core.Services;
 
-namespace BookStore_project.Core.Services
+namespace BookStore_project.Infra.Services
 {
     public class OrderItemService : IOrderItemService
     {
-        private readonly IOrderItemRepository _orderItemRepository;
+        private readonly IOrderItemRepository orderItemRepository;
 
         public OrderItemService(IOrderItemRepository orderItemRepository)
         {
-            _orderItemRepository = orderItemRepository;
+            this.orderItemRepository = orderItemRepository;
         }
 
-        public async Task<IEnumerable<OrderItem>> GetAllOrderItemsAsync()
+        public List<OrderItem> GetAllOrderItems()
         {
-            return await _orderItemRepository.GetAllOrderItemsAsync();
+            return orderItemRepository.GetAllOrderItems();
         }
 
-        public async Task<OrderItem?> GetOrderItemByIdAsync(decimal id)
+        public OrderItem GetOrderItemById(decimal id)
         {
-            return await _orderItemRepository.GetOrderItemByIdAsync(id);
+            return orderItemRepository.GetOrderItemById(id);
         }
 
-        public async Task<IEnumerable<OrderItem>> GetItemsByOrderAsync(decimal orderId)
+        public void CreateOrderItem(OrderItem orderItem)
         {
-            return await _orderItemRepository.GetItemsByOrderAsync(orderId);
+            orderItemRepository.CreateOrderItem(orderItem);
         }
 
-        public async Task CreateOrderItemAsync(OrderItem orderItem)
+        public void UpdateOrderItem(OrderItem orderItem)
         {
-            await _orderItemRepository.CreateOrderItemAsync(orderItem);
+            orderItemRepository.UpdateOrderItem(orderItem);
         }
 
-        public async Task UpdateOrderItemAsync(OrderItem orderItem)
+        public void DeleteOrderItem(decimal id)
         {
-            await _orderItemRepository.UpdateOrderItemAsync(orderItem);
+            orderItemRepository.DeleteOrderItem(id);
         }
 
-        public async Task DeleteOrderItemAsync(decimal id)
+        public List<OrderItem> GetItemsByOrder(decimal ordId)
         {
-            await _orderItemRepository.DeleteOrderItemAsync(id);
+            return orderItemRepository.GetItemsByOrder(ordId);
         }
     }
 }

@@ -1,51 +1,51 @@
 ﻿using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
-using BookStore_project.Core.IServices;
+using BookStore_project.Core.Services;
 
-namespace BookStore_project.Core.Services
+namespace BookStore_project.Infra.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository productRepository;
 
         public ProductService(IProductRepository productRepository)
         {
-            _productRepository = productRepository;
+            this.productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public List<Product> GetAllProducts()
         {
-            return await _productRepository.GetAllProductsAsync();
+            return productRepository.GetAllProducts();
         }
 
-        public async Task<Product?> GetProductByIdAsync(decimal id)
+        public Product GetProductById(decimal id)
         {
-            return await _productRepository.GetProductByIdAsync(id);
+            return productRepository.GetProductById(id);
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsByCategoryAsync(decimal categoryId)
+        public void CreateProduct(Product product)
         {
-            return await _productRepository.GetAllProductsByCategoryAsync(categoryId);
+            productRepository.CreateProduct(product);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByAuthorAsync(decimal authorId)
+        public void UpdateProduct(Product product)
         {
-            return await _productRepository.GetProductsByAuthorAsync(authorId);
+            productRepository.UpdateProduct(product);
         }
 
-        public async Task CreateProductAsync(Product product)
+        public void DeleteProduct(decimal id)
         {
-            await _productRepository.CreateProductAsync(product);
+            productRepository.DeleteProduct(id);
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public List<Product> GetAllProductsByCategory(decimal catId)
         {
-            await _productRepository.UpdateProductAsync(product);
+            return productRepository.GetAllProductsByCategory(catId);
         }
 
-        public async Task DeleteProductAsync(decimal id)
+        public List<Product> GetProductsByAuthor(decimal authId)
         {
-            await _productRepository.DeleteProductAsync(id);
+            return productRepository.GetProductsByAuthor(authId);
         }
     }
 }

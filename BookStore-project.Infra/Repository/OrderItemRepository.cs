@@ -1,94 +1,92 @@
-﻿//using BookStore.API.Models;
+﻿using System.Data;
 using BookStore_project.Core.Common;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using Dapper;
-using System.Data;
 
 namespace BookStore_project.Infra.Repository
 {
     public class OrderItemRepository : IOrderItemRepository
     {
-        private readonly IDbContext _dbContext;
+        private readonly IDbContext DbContext;
 
-        public OrderItemRepository(IDbContext dbContext)
+        public OrderItemRepository(IDbContext dBContext)
         {
-            _dbContext = dbContext;
+            this.DbContext = dBContext;
         }
 
-        public async Task<IEnumerable<OrderItem>> GetAllOrderItemsAsync()
+        public List<OrderItem> GetAllOrderItems()
         {
-            using var connection = _dbContext.Connection;
-            return await connection.QueryAsync<OrderItem>(
+            IEnumerable<OrderItem> result = DbContext.Connection.Query<OrderItem>(
                 "ORDER_ITEM_PACKAGE.GetAllOrderItems",
                 commandType: CommandType.StoredProcedure);
+            return result.ToList();
         }
 
-        public async Task<OrderItem?> GetOrderItemByIdAsync(decimal id)
+        public OrderItem GetOrderItemById(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("ID", id, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            return await connection.QueryFirstOrDefaultAsync<OrderItem>(
+            IEnumerable<OrderItem> result = DbContext.Connection.Query<OrderItem>(
                 "ORDER_ITEM_PACKAGE.GETORDERITEMBYID",
                 p,
                 commandType: CommandType.StoredProcedure);
+
+            return result.FirstOrDefault();
         }
 
-        public async Task<IEnumerable<OrderItem>> GetItemsByOrderAsync(decimal orderId)
+        public void CreateOrderItem(OrderItem orderItem)
         {
-            var p = new DynamicParameters();
-            p.Add("Ord_Id", orderId, DbType.Decimal, ParameterDirection.Input);
+            var parameters = new DynamicParameters();
+            parameters.Add("Order_Id", orderItem.OrderId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            parameters.Add("Product_Id", orderItem.ProductId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            parameters.Add("Quantity", orderItem.Quantity, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            parameters.Add("Unit_Price", orderItem.UnitPrice, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            return await connection.QueryAsync<OrderItem>(
-                "ORDER_ITEM_PACKAGE.GetItemsByOrder",
-                p,
-                commandType: CommandType.StoredProcedure);
-        }
-
-        public async Task CreateOrderItemAsync(OrderItem orderItem)
-        {
-            var p = new DynamicParameters();
-            p.Add("Order_Id", orderItem.OrderId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Product_Id", orderItem.ProductId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Quantity", orderItem.Quantity, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Unit_Price", orderItem.UnitPrice, DbType.Decimal, ParameterDirection.Input);
-
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_ITEM_PACKAGE.CREATEORDERITEM",
-                p,
+                parameters,
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateOrderItemAsync(OrderItem orderItem)
+        public void UpdateOrderItem(OrderItem orderItem)
         {
             var p = new DynamicParameters();
-            p.Add("ID", orderItem.OrderItemId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Order_Id", orderItem.OrderId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Product_Id", orderItem.ProductId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Quantity", orderItem.Quantity, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Unit_Price", orderItem.UnitPrice, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", orderItem.OrderItemId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Order_Id", orderItem.OrderId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Product_Id", orderItem.ProductId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Quantity", orderItem.Quantity, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            p.Add("Unit_Price", orderItem.UnitPrice, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_ITEM_PACKAGE.UPDATEORDERITEM",
                 p,
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteOrderItemAsync(decimal id)
+        public void DeleteOrderItem(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("ID", id, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_ITEM_PACKAGE.DELETEORDERITEM",
                 p,
                 commandType: CommandType.StoredProcedure);
+        }
+
+        public List<OrderItem> GetItemsByOrder(decimal ordId)
+        {
+            var p = new DynamicParameters();
+            p.Add("Ord_Id", ordId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+
+            IEnumerable<OrderItem> result = DbContext.Connection.Query<OrderItem>(
+                "ORDER_ITEM_PACKAGE.GetItemsByOrder",
+                p,
+                commandType: CommandType.StoredProcedure);
+
+            return result.ToList();
         }
     }
 }

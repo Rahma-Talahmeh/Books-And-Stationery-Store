@@ -1,96 +1,93 @@
-﻿//using BookStore.API.Models;
+﻿
+using System.Data;
 using BookStore_project.Core.Common;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using Dapper;
-using System.Data;
 
 namespace BookStore_project.Infra.Repository
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly IDbContext _dbContext;
+        private readonly IDbContext DbContext;
 
-        public OrderRepository(IDbContext dbContext)
+        public OrderRepository(IDbContext dBContext)
         {
-            _dbContext = dbContext;
+            this.DbContext = dBContext;
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        public List<Order> GetAllOrders()
         {
-            using var connection = _dbContext.Connection;
-            return await connection.QueryAsync<Order>(
+            IEnumerable<Order> result = DbContext.Connection.Query<Order>(
                 "ORDER_PACKAGE.GetAllOrders",
                 commandType: CommandType.StoredProcedure);
+            return result.ToList();
         }
 
-        public async Task<Order?> GetOrderByIdAsync(decimal id)
+        public Order GetOrderById(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("ID", id, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            return await connection.QueryFirstOrDefaultAsync<Order>(
+            IEnumerable<Order> result = DbContext.Connection.Query<Order>(
                 "ORDER_PACKAGE.GETORDERBYID",
                 p,
                 commandType: CommandType.StoredProcedure);
+
+            return result.FirstOrDefault();
         }
 
-        public async Task CreateOrderAsync(Order order)
+        public void CreateOrder(Order order)
         {
-            var p = new DynamicParameters();
-            p.Add("Customer_Name", order.CustomerName, DbType.String, ParameterDirection.Input);
-            p.Add("Phone_Number", order.PhoneNumber, DbType.String, ParameterDirection.Input);
-            p.Add("Delivery_Address", order.DeliveryAddress, DbType.String, ParameterDirection.Input);
-            p.Add("Order_Status", order.OrderStatus, DbType.String, ParameterDirection.Input);
-            p.Add("Payment_Method", order.PaymentMethod, DbType.String, ParameterDirection.Input);
-            p.Add("Total_Amount", order.TotalAmount, DbType.Decimal, ParameterDirection.Input);
+            var parameters = new DynamicParameters();
+            parameters.Add("Customer_Name", order.CustomerName, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Phone_Number", order.PhoneNumber, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Delivery_Address", order.DeliveryAddress, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Order_Status", order.OrderStatus, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Payment_Method", order.PaymentMethod, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Total_Amount", order.TotalAmount, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_PACKAGE.CREATEORDER",
-                p,
+                parameters,
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateOrderAsync(Order order)
+        public void UpdateOrder(Order order)
         {
             var p = new DynamicParameters();
-            p.Add("ID", order.OrderId, DbType.Decimal, ParameterDirection.Input);
-            p.Add("Customer_Name", order.CustomerName, DbType.String, ParameterDirection.Input);
-            p.Add("Phone_Number", order.PhoneNumber, DbType.String, ParameterDirection.Input);
-            p.Add("Delivery_Address", order.DeliveryAddress, DbType.String, ParameterDirection.Input);
-            p.Add("Order_Status", order.OrderStatus, DbType.String, ParameterDirection.Input);
-            p.Add("Payment_Method", order.PaymentMethod, DbType.String, ParameterDirection.Input);
-            p.Add("Total_Amount", order.TotalAmount, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", order.OrderId, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Customer_Name", order.CustomerName, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Phone_Number", order.PhoneNumber, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Delivery_Address", order.DeliveryAddress, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Order_Status", order.OrderStatus, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Payment_Method", order.PaymentMethod, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Total_Amount", order.TotalAmount, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_PACKAGE.UPDATEORDER",
                 p,
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteOrderAsync(decimal id)
+        public void DeleteOrder(decimal id)
         {
             var p = new DynamicParameters();
-            p.Add("ID", id, DbType.Decimal, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_PACKAGE.DELETEORDER",
                 p,
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateOrderStatusAsync(decimal id, string newStatus)
+        public void UpdateOrderStatus(decimal id, string newStatus)
         {
             var p = new DynamicParameters();
-            p.Add("ID", id, DbType.Decimal, ParameterDirection.Input);
-            p.Add("New_Status", newStatus, DbType.String, ParameterDirection.Input);
+            p.Add("ID", id, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("New_Status", newStatus, dbType: DbType.String, direction: ParameterDirection.Input);
 
-            using var connection = _dbContext.Connection;
-            await connection.ExecuteAsync(
+            DbContext.Connection.Execute(
                 "ORDER_PACKAGE.UpdateOrderStatus",
                 p,
                 commandType: CommandType.StoredProcedure);
