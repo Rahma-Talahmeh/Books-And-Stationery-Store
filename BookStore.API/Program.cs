@@ -1,5 +1,5 @@
 using BookStore_project.Core.Common;
-using BookStore_project.Core.IServices;
+//using BookStore_project.Core.IServices;
 using BookStore_project.Core.Repository;
 using BookStore_project.Core.Services;
 using BookStore_project.Infra;
@@ -39,6 +39,14 @@ builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
+builder.Services.AddScoped<IPublisherService, PublisherService>();
+
+
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+
 
 var app = builder.Build();
 

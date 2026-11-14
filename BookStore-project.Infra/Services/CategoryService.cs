@@ -1,7 +1,7 @@
-﻿using BookStore_project.Core.IServices;
+﻿using BookStore_project.Core.Services;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
-using BookStore_project.Core.Services;
+//using BookStore_project.Core.Services;
 
 namespace BookStore_project.Infra.Services
 {

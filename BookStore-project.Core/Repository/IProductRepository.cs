@@ -5,7 +5,7 @@ namespace BookStore_project.Core.Repository
     public interface IProductRepository
     {
         List<Product> GetAllProducts();
-        Product GetProductById(decimal id);
+        Product? GetProductById(decimal id);
         void CreateProduct(Product product);
         void UpdateProduct(Product product);
         void DeleteProduct(decimal id);
