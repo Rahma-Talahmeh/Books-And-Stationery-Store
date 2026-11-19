@@ -10,4 +10,9 @@ namespace BookStore_project.Core.Services
         void CreateAuthor(Author author);
         void UpdateAuthor(Author author);
         void DeleteAuthor(decimal id);
-    }}
+
+        // Multi-Mapping
+
+        Task<List<Author>> GetAllAuthorProductsAsync();
+    }
+}

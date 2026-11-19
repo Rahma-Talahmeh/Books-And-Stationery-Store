@@ -44,5 +44,7 @@ public partial class Product
 
     public virtual Publisher? Publisher { get; set; }
 
-    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+    //public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public List<Review> Reviews { get; set; } = new List<Review>();
 }

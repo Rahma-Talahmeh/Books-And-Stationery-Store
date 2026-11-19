@@ -21,5 +21,7 @@ public partial class Order
 
     public DateTime? OrderDate { get; set; }
 
-    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    //public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+    public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

@@ -8,6 +8,8 @@ using BookStore_project.Infra.Repository;
 using BookStore_project.Infra.Services;
 
 
+//Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

@@ -1,4 +1,5 @@
-﻿using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.DTO;
+using BookStore_project.Core.Models;
 
 namespace BookStore_project.Core.Repository
 {
@@ -11,5 +12,10 @@ namespace BookStore_project.Core.Repository
         void DeleteProduct(decimal id);
         List<Product> GetAllProductsByCategory(decimal catId);
         List<Product> GetProductsByAuthor(decimal authId);
+
+        List<Filter> Search(Filter search);
+
+        // Multi-Mapping
+        Task<List<Product>> GetAllProductReviewsAsync();
     }
 }

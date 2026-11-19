@@ -9,5 +9,8 @@ namespace BookStore_project.Core.Repository
         void CreateCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(decimal id);
+
+        //Multi-Mapping
+        Task<List<Category>> GetAllCategoryProductsAsync();
     }
 }

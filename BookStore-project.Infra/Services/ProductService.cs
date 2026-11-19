@@ -1,6 +1,8 @@
-﻿using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.DTO;
+using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using BookStore_project.Core.Services;
+using BookStore_project.Infra.Repository;
 
 namespace BookStore_project.Infra.Services
 {
@@ -46,6 +48,19 @@ namespace BookStore_project.Infra.Services
         public List<Product> GetProductsByAuthor(decimal authId)
         {
             return productRepository.GetProductsByAuthor(authId);
+        }
+
+
+        public List<Filter> Search(Filter search)
+        {
+            return productRepository.Search(search);
+        }
+
+        // Multi-Mapping
+
+        public Task<List<Product>> GetAllProductReviewsAsync()
+        {
+            return productRepository.GetAllProductReviewsAsync();
         }
     }
 }

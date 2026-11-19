@@ -1,5 +1,8 @@
-﻿using BookStore_project.Core.Models;
+﻿using BookStore_project.Core.DTO;
+using BookStore_project.Core.Models;
+using BookStore_project.Core.Repository;
 using BookStore_project.Core.Services;
+using BookStore_project.Infra.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore_project.API.Controllers
@@ -60,5 +63,22 @@ namespace BookStore_project.API.Controllers
         {
             return productService.GetProductsByAuthor(authId);
         }
+
+        [HttpPost]
+        [Route("Search")]
+        public List<Filter> Search(
+        [FromBody] Filter search){
+
+            return productService.Search(search);
+        }
+
+        // Multi-Mapping
+        [HttpGet]
+        [Route("GetAllProductReviews")]
+        public async Task<List<Product>> GetAllProductReviews()
+        {
+            return await productService.GetAllProductReviewsAsync();
+        }
+
     }
 }

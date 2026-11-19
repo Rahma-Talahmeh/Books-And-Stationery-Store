@@ -1,5 +1,6 @@
 ﻿using BookStore_project.Core.Models;
 using BookStore_project.Core.Services;
+using BookStore_project.Infra.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore_project.API.Controllers
@@ -45,6 +46,14 @@ namespace BookStore_project.API.Controllers
         public void DeleteCategory(decimal id)
         {
             categoryService.DeleteCategory(id);
+        }
+
+        //Multi-Mapping
+        [HttpGet]
+        [Route("GetAllCategoryProducts")]
+        public async Task<List<Category>> GetAllCategoryProducts()
+        {
+            return await categoryService.GetAllCategoryProductsAsync();
         }
     }
 }

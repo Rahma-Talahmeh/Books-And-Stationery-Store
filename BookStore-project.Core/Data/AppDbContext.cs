@@ -50,29 +50,29 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.AdminId).HasName("SYS_C008336");
+            entity.HasKey(e => e.ADMIN_ID).HasName("SYS_C008336");
 
             entity.ToTable("ADMINS");
 
-            entity.HasIndex(e => e.Username, "SYS_C008337").IsUnique();
+            entity.HasIndex(e => e.USERNAME, "SYS_C008337").IsUnique();
 
-            entity.Property(e => e.AdminId)
+            entity.Property(e => e.ADMIN_ID)
                 .ValueGeneratedOnAdd()
                 .HasColumnType("NUMBER")
                 .HasColumnName("ADMIN_ID");
-            entity.Property(e => e.Email)
+            entity.Property(e => e.EMAIL    )
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("EMAIL");
-            entity.Property(e => e.FullName)
+            entity.Property(e => e.FULL_NAME)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("FULL_NAME");
-            entity.Property(e => e.PasswordHash)
+            entity.Property(e => e.PASSWORD_HASH)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("PASSWORD_HASH");
-            entity.Property(e => e.Username)
+            entity.Property(e => e.USERNAME)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("USERNAME");

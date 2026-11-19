@@ -1,14 +1,11 @@
-namespace BookStore_project.Core.Models;
-
-public class Admin
+namespace BookStore_project.Core.Models
 {
-    public decimal AdminId { get; set; }
-
-    public string Username { get; set; } = null!;
-
-    public string PasswordHash { get; set; } = null!;
-
-    public string FullName { get; set; } = null!;
-
-    public string Email { get; set; } = null!;
+    public class Admin
+    {
+        public decimal ADMIN_ID { get; set; }
+        public string USERNAME { get; set; } = string.Empty;
+        public string PASSWORD_HASH { get; set; } = string.Empty;
+        public string FULL_NAME { get; set; } = string.Empty;
+        public string EMAIL { get; set; } = string.Empty;
+    }
 }

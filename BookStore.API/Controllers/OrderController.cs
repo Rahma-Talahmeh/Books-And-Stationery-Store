@@ -1,5 +1,6 @@
 ﻿using BookStore_project.Core.Models;
 using BookStore_project.Core.Services;
+using BookStore_project.Infra.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore_project.API.Controllers
@@ -52,6 +53,15 @@ namespace BookStore_project.API.Controllers
         public void UpdateOrderStatus(decimal id, string newStatus)
         {
             orderService.UpdateOrderStatus(id, newStatus);
+        }
+
+        //Multi Mapping
+
+        [HttpGet]
+        [Route("GetAllOrderItems")]
+        public async Task<List<Order>> GetAllOrderItems()
+        {
+            return await orderService.GetAllOrderItemsAsync();
         }
     }
 }

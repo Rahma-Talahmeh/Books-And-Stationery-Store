@@ -71,5 +71,31 @@ namespace BookStore_project.Infra.Repository
                 p,
                 commandType: CommandType.StoredProcedure);
         }
+
+        //Multi-Mapping
+        public async Task<List<Category>> GetAllCategoryProductsAsync()
+        {
+            var parameters = new DynamicParameters();
+
+            var result = await DbContext.Connection.QueryAsync<Category, Product, Category>(
+                "Category_Package.GetAllCategoryProducts",
+                (category, product) =>
+                {
+                    category.Products.Add(product);
+                    return category;
+                },
+                splitOn: "ProductId",
+                param: parameters,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result.GroupBy(c => c.CategoryId)
+                .Select(group =>
+                {
+                    var groupedCategory = group.First();
+                    groupedCategory.Products = group.Select(c => c.Products.Single()).ToList();
+                    return groupedCategory;
+                }).ToList();
+        }
     }
 }

@@ -9,5 +9,9 @@ namespace BookStore_project.Core.Repository
         void CreateAuthor(Author author);
         void UpdateAuthor(Author author);
         void DeleteAuthor(decimal id);
+
+        //Multi-Mapping
+        Task<List<Author>> GetAllAuthorProductsAsync();
     }
 }
+

@@ -39,8 +39,10 @@ namespace BookStore_project.Infra.Repository
         public void CreateAdmin(Admin admin)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("Admin_Name", admin.Username, dbType: DbType.String, direction: ParameterDirection.Input);
-            parameters.Add("Email", admin.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Username", admin.USERNAME, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Password_Hash", admin.PASSWORD_HASH, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Full_Name", admin.FULL_NAME, dbType: DbType.String, direction: ParameterDirection.Input);
+            parameters.Add("Email", admin.EMAIL, dbType: DbType.String, direction: ParameterDirection.Input);
 
             _dbContext.Connection.Execute(
                 "Admin_Package.CREATEADMIN",
@@ -51,9 +53,11 @@ namespace BookStore_project.Infra.Repository
         public void UpdateAdmin(Admin admin)
         {
             var p = new DynamicParameters();
-            p.Add("ID", admin.AdminId, dbType: DbType.Int32, direction: ParameterDirection.Input);
-            p.Add("Admin_Name", admin.Username, dbType: DbType.String, direction: ParameterDirection.Input);
-            p.Add("Email", admin.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("ID", admin.ADMIN_ID, dbType: DbType.Decimal, direction: ParameterDirection.Input);
+            p.Add("Username", admin.USERNAME, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Password_Hash", admin.PASSWORD_HASH, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Full_Name", admin.FULL_NAME, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("Email", admin.EMAIL, dbType: DbType.String, direction: ParameterDirection.Input);
 
             _dbContext.Connection.Execute(
                 "Admin_Package.UPDATEADMIN",

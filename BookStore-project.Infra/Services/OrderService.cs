@@ -1,6 +1,7 @@
 ﻿using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using BookStore_project.Core.Services;
+using BookStore_project.Infra.Repository;
 
 namespace BookStore_project.Infra.Services
 {
@@ -41,6 +42,13 @@ namespace BookStore_project.Infra.Services
         public void UpdateOrderStatus(decimal id, string newStatus)
         {
             orderRepository.UpdateOrderStatus(id, newStatus);
+        }
+
+        //Multi Mapping
+
+        public Task<List<Order>> GetAllOrderItemsAsync()
+        {
+            return orderRepository.GetAllOrderItemsAsync();
         }
     }
 }

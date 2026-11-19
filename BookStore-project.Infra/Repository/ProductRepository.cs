@@ -1,8 +1,9 @@
-﻿using System.Data;
-using BookStore_project.Core.Common;
+﻿using BookStore_project.Core.Common;
+using BookStore_project.Core.DTO;
 using BookStore_project.Core.Models;
 using BookStore_project.Core.Repository;
 using Dapper;
+using System.Data;
 
 namespace BookStore_project.Infra.Repository
 {
@@ -121,5 +122,50 @@ namespace BookStore_project.Infra.Repository
 
             return result.ToList();
         }
+
+        public List<Filter> Search(Filter search)
+        {
+            var p = new DynamicParameters();
+            p.Add("bTitle", search.Title,dbType: DbType.String, direction:ParameterDirection.Input );
+            p.Add("aName",  search.AuthorName, dbType: DbType.String, direction: ParameterDirection.Input);
+            p.Add("cName",  search.CategoryName, dbType: DbType.String, direction: ParameterDirection.Input);
+
+            var result = DbContext.Connection.Query<Filter>(
+                "Book_Search_Pkg.SearchBooks",
+                p,
+                commandType: CommandType.StoredProcedure);
+
+            return result.ToList();
+        }
+
+        // Multi-Mapping
+        public async Task<List<Product>> GetAllProductReviewsAsync()
+        {
+            var parameters = new DynamicParameters();
+
+            var result = await DbContext.Connection.QueryAsync<Product, Review, Product>(
+                "PRODUCT_PACKAGE.GetAllProductReviews",
+                (product, review) =>
+                {
+                    if (review != null && review.ReviewId > 0)
+                    {
+                        product.Reviews.Add(review);
+                    }
+                    return product;
+                },
+                splitOn: "ReviewId",
+                param: parameters,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result.GroupBy(p => p.ProductId)
+                .Select(group =>
+                {
+                    var groupedProduct = group.First();
+                    groupedProduct.Reviews = group.SelectMany(p => p.Reviews).Distinct().ToList();
+                    return groupedProduct;
+                }).ToList();
+        }
     }
+
 }

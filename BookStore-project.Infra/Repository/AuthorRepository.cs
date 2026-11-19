@@ -41,7 +41,7 @@ namespace BookStore_project.Infra.Repository
             var parameters = new DynamicParameters();
             parameters.Add("Author_Name", author.AuthorName, dbType: DbType.String, direction: ParameterDirection.Input);
             parameters.Add("Bio", author.Bio, dbType: DbType.String, direction: ParameterDirection.Input);
-
+            //
             _dbContext.Connection.Execute(
                 "AUTHOR_PACKAGE.CREATEAUTHOR",
                 parameters,
@@ -70,6 +70,33 @@ namespace BookStore_project.Infra.Repository
                 "AUTHOR_PACKAGE.DELETEAUTHOR",
                 p,
                 commandType: CommandType.StoredProcedure);
+        }
+
+        //Multi-Mapping
+
+        public async Task<List<Author>> GetAllAuthorProductsAsync()
+        {
+            var parameters = new DynamicParameters();
+
+            var result = await _dbContext.Connection.QueryAsync<Author, Product, Author>(
+                "AUTHOR_PACKAGE.GetAllAuthorProducts",
+                (author, product) =>
+                {
+                    author.Products.Add(product);
+                    return author;
+                },
+                splitOn: "ProductId",
+                param: parameters,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result.GroupBy(a => a.AuthorId)
+                .Select(group =>
+                {
+                    var groupedAuthor = group.First();
+                    groupedAuthor.Products = group.Select(a => a.Products.Single()).ToList();
+                    return groupedAuthor;
+                }).ToList();
         }
     }
 }

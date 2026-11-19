@@ -38,5 +38,12 @@ namespace BookStore_project.Infra.Services
         {
             _authorRepository.DeleteAuthor(id);
         }
+
+        // Multi-Mapping
+        public Task<List<Author>> GetAllAuthorProductsAsync()
+        {
+            return _authorRepository.GetAllAuthorProductsAsync();
+        }
+
     }
 }

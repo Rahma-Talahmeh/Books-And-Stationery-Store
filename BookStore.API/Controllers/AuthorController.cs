@@ -44,5 +44,15 @@ namespace BookStore_project.API.Controllers
         {
             _authorService.DeleteAuthor(id);
         }
+
+
+        // Multi-Mapping
+
+        [HttpGet]
+        [Route("GetAllAuthorProducts")]
+        public async Task<List<Author>> GetAllAuthorProducts()
+        {
+            return await _authorService.GetAllAuthorProductsAsync();
+        }
     }
 }

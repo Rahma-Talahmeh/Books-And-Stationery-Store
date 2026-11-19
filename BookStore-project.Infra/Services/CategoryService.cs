@@ -38,5 +38,13 @@ namespace BookStore_project.Infra.Services
         {
             categoryRepository.DeleteCategory(id);
         }
+
+
+        //Multi-Mapping
+        public Task<List<Category>> GetAllCategoryProductsAsync()
+        {
+            return categoryRepository.GetAllCategoryProductsAsync();
+        }
+
     }
 }

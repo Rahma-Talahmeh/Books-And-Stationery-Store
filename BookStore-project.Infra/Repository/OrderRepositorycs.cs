@@ -92,5 +92,32 @@ namespace BookStore_project.Infra.Repository
                 p,
                 commandType: CommandType.StoredProcedure);
         }
+
+        //Multi Mapping
+
+        public async Task<List<Order>> GetAllOrderItemsAsync()
+        {
+            var parameters = new DynamicParameters();
+
+            var result = await DbContext.Connection.QueryAsync<Order, OrderItem, Order>(
+                "ORDER_PACKAGE.GetAllOrderItems",
+                (order, orderItem) =>
+                {
+                    order.OrderItems.Add(orderItem);
+                    return order;
+                },
+                splitOn: "OrderItemId",
+                param: parameters,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result.GroupBy(o => o.OrderId)
+                .Select(group =>
+                {
+                    var groupedOrder = group.First();
+                    groupedOrder.OrderItems = group.Select(o => o.OrderItems.Single()).ToList();
+                    return groupedOrder;
+                }).ToList();
+        }
     }
 }

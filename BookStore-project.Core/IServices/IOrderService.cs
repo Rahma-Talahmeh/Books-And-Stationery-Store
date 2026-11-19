@@ -11,5 +11,8 @@ namespace BookStore_project.Core.Services
         void UpdateOrder(Order order);
         void DeleteOrder(decimal id);
         void UpdateOrderStatus(decimal id, string newStatus);
+
+        //Multi Mapping
+        Task<List<Order>> GetAllOrderItemsAsync();
     }
 }
