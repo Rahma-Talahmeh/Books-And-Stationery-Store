@@ -13,6 +13,7 @@
     </PackageReference>
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26301" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
   </ItemGroup>
 
   <ItemGroup>

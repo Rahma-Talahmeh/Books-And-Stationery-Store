@@ -1,4 +1,5 @@
 using BookStore_project.Core.Common;
+using BookStore_project.Core.IServices;
 //using BookStore_project.Core.IServices;
 using BookStore_project.Core.Repository;
 using BookStore_project.Core.Services;
@@ -6,6 +7,9 @@ using BookStore_project.Infra;
 using BookStore_project.Infra.Common;
 using BookStore_project.Infra.Repository;
 using BookStore_project.Infra.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 //Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
@@ -49,6 +53,18 @@ builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+
+builder.Services.AddAuthentication(options => { options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+}).AddJwtBearer(options => { options.TokenValidationParameters = new TokenValidationParameters 
+{ 
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true, 
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MyTrainingJWTSecretKey2026Secure!")) }; });
 
 var app = builder.Build();
 
@@ -60,6 +76,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
