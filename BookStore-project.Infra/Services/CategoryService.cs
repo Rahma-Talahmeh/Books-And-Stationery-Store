@@ -9,9 +9,9 @@ namespace BookStore_project.Infra.Services
     {
         private readonly ICategoryRepository categoryRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository _categoryRepository)
         {
-            this.categoryRepository = categoryRepository;
+            this.categoryRepository = _categoryRepository;
         }
 
         public List<Category> GetAllCategory()

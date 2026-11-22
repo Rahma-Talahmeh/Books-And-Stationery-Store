@@ -11,3 +11,4 @@ namespace BookStore_project.Core.IServices
         public string Authintication(Login login);
     }
 }
+//.

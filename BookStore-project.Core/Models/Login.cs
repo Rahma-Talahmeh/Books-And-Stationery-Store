@@ -14,3 +14,4 @@ namespace BookStore_project.Core.Models
         public decimal Roleid { get; set; }
     }
 }
+//.

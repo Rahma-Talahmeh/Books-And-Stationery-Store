@@ -11,9 +11,9 @@ namespace BookStore_project.API.Controllers
     {
         private readonly ICategoryService categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService _categoryService)
         {
-            this.categoryService = categoryService;
+            this.categoryService = _categoryService;
         }
 
         [HttpGet]
