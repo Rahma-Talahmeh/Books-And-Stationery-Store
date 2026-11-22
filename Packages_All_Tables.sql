@@ -393,3 +393,71 @@ create or replace PACKAGE BODY ORDER_ITEM_PACKAGE AS
 END ORDER_ITEM_PACKAGE;
 
 /
+
+create or replace PACKAGE Login_Package AS
+    PROCEDURE User_Login(
+        User_NAME IN VARCHAR2,
+        PASS      IN VARCHAR2
+    );
+END Login_Package;
+/
+
+create or replace PACKAGE BODY Login_Package AS
+    PROCEDURE User_Login(
+        User_NAME IN VARCHAR2,
+        PASS      IN VARCHAR2
+    ) AS
+        c_all SYS_REFCURSOR;
+    BEGIN
+        OPEN c_all FOR
+            SELECT USERNAME AS Username,
+                   ROLEID   AS Roleid
+            FROM LOGIN
+            WHERE USERNAME = User_NAME
+              AND PASSWORD = PASS;
+
+        DBMS_SQL.RETURN_RESULT(c_all);
+    END User_Login;
+END Login_Package;
+/
+
+create or replace PACKAGE Book_Search_Pkg AS
+    PROCEDURE SearchBooks(
+        bTitle IN VARCHAR2,
+        aName  IN VARCHAR2,
+        cName  IN VARCHAR2
+    );
+END Book_Search_Pkg;
+/
+
+create or replace PACKAGE BODY Book_Search_Pkg AS
+    PROCEDURE SearchBooks(
+        bTitle IN VARCHAR2,
+        aName  IN VARCHAR2,
+        cName  IN VARCHAR2
+    )
+    AS
+        Get_Cur SYS_REFCURSOR;
+    BEGIN
+        OPEN Get_Cur FOR
+            SELECT 
+                p.PRODUCT_ID AS ProductId,
+                p.TITLE AS BookTitle,
+                a.AUTHOR_NAME AS AuthorName,
+                c.CATEGORY_NAME AS CategoryName,
+                p.PRICE AS Price
+            FROM PRODUCTS p
+            INNER JOIN AUTHORS a ON p.AUTHOR_ID = a.AUTHOR_ID
+            INNER JOIN CATEGORIES c ON p.CATEGORY_ID = c.CATEGORY_ID
+            WHERE 
+                (bTitle IS NULL OR UPPER(p.TITLE) LIKE '%' || UPPER(bTitle) || '%')
+                AND 
+                (aName IS NULL OR UPPER(a.AUTHOR_NAME) LIKE '%' || UPPER(aName) || '%')
+                AND
+                (cName IS NULL OR UPPER(c.CATEGORY_NAME) LIKE '%' || UPPER(cName) || '%');
+
+
+        DBMS_SQL.RETURN_RESULT(Get_Cur);
+    END SearchBooks;
+END Book_Search_Pkg;
+/
