@@ -1,0 +1,37 @@
+.footer {
+  background-color: #2b1d16;
+  color: #fdf8f2;
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 40px;
+}
+
+.footer h2 {
+  margin: 0 0 10px;
+  color: #e0a96d;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer-links {
+  margin: 20px 0;
+}
+
+.footer-links a {
+  color: #e0a96d;
+  text-decoration: none;
+  margin: 0 15px;
+  transition: color 0.25s ease;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.copyright {
+  font-size: 14px;
+  color: #d6c7b8;
+  margin-top: 20px;
+}

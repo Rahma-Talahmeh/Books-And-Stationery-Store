@@ -1,0 +1,60 @@
+<section class="store-container">
+  <h2>{{ store.storeName }} Catalog</h2>
+  <p>{{ store.welcomeMessage }}</p>
+
+  <div *ngIf="store.lastAddedItem" class="toast-banner">
+    Added "{{ store.lastAddedItem }}" to your cart!
+  </div>
+
+  <div class="controls">
+    <div class="filter-buttons">
+      <button
+        type="button"
+        [ngClass]="selectedCategory === 'All' ? 'active-btn' : 'filter-btn'"
+        (click)="setCategory('All')">
+        All
+      </button>
+      <button
+        type="button"
+        [ngClass]="selectedCategory === 'Books' ? 'active-btn' : 'filter-btn'"
+        (click)="setCategory('Books')">
+        Books
+      </button>
+      <button
+        type="button"
+        [ngClass]="selectedCategory === 'Stationery' ? 'active-btn' : 'filter-btn'"
+        (click)="setCategory('Stationery')">
+        Stationery
+      </button>
+    </div>
+
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search books or stationery..."
+      [(ngModel)]="searchQuery" />
+  </div>
+
+  <div *ngIf="filteredProducts.length > 0" class="products-grid">
+    <article class="product-card" *ngFor="let item of filteredProducts">
+      <img [src]="item.image" [alt]="item.title" class="product-img" />
+      <div class="product-body">
+        <span class="category-tag">{{ item.category }}</span>
+        <h3>{{ item.title }}</h3>
+        <p class="price">${{ item.price.toFixed(2) }}</p>
+
+        <button
+          type="button"
+          class="add-btn"
+          [disabled]="!item.inStock"
+          (click)="store.addToCart(item)">
+          {{ item.inStock ? 'Add to Cart' : 'Out of Stock' }}
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <p *ngIf="filteredProducts.length === 0" class="empty-state">
+    No matching items found.
+  </p>
+</section>

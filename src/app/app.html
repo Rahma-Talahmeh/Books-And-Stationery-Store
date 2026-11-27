@@ -1,0 +1,74 @@
+<app-navbar> </app-navbar>
+
+<main class="store-container">
+  <section class="hero">
+    <h1>{{ storeTitle }}</h1>
+    <p>{{ heroSubtitle }}</p>
+    <div class="cart-badge">Cart Items: {{ cartCount }}</div>
+  </section>
+
+  @if (lastAddedItem) {
+    <div class="toast-banner">
+      Added "{{ lastAddedItem }}" to your cart.
+    </div>
+  }
+
+  <section class="controls">
+    <div class="filter-buttons">
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'All'"
+        (click)="setCategory('All')">
+        All
+      </button>
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'Books'"
+        (click)="setCategory('Books')">
+        Books
+      </button>
+      <button
+        type="button"
+        [class.active]="selectedCategory === 'Stationery'"
+        (click)="setCategory('Stationery')">
+        Stationery
+      </button>
+    </div>
+
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search books or stationery..."
+      [(ngModel)]="searchQuery" />
+  </section>
+
+  @if (filteredProducts.length > 0) {
+    <section class="products-grid">
+      @for (item of filteredProducts; track item.id) {
+        <article class="product-card">
+          <img [src]="item.image" [alt]="item.title" class="product-img" />
+          <div class="product-body">
+            <span class="category-tag">{{ item.category }}</span>
+            <h3>{{ item.title }}</h3>
+            <p class="price">${{ item.price.toFixed(2) }}</p>
+
+            <button
+              type="button"
+              class="add-btn"
+              [disabled]="!item.inStock"
+              (click)="addToCart(item)">
+              {{ item.inStock ? 'Add to Cart' : 'Out of Stock' }}
+            </button>
+          </div>
+        </article>
+      }
+    </section>
+  } @else {
+    <p class="empty-state">No matching items found.</p>
+  }
+</main>
+<router-outlet></router-outlet>
+<app-footer></app-footer>
+
+
+
